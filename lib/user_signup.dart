@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:libx/constants.dart';
+import 'package:libx/user_login.dart';
 
 class user_signup extends StatefulWidget {
   const user_signup({Key? key}) : super(key: key);
@@ -23,6 +26,11 @@ class Signup extends StatefulWidget {
 }
 
 class _SignupState extends State<Signup> {
+  final usernamecontroller = TextEditingController();
+  final emailcontroller = TextEditingController();
+  final passwordcontroller = TextEditingController();
+  final confirmpasswordcontroller = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,14 +68,13 @@ class _SignupState extends State<Signup> {
                 height: 20,
               ),
               //text closed here
-
               //---------------------------------------------------------
               //Text field user name
-
               Container(
                 width: 300,
                 height: 50,
                 child: TextField(
+                  controller: usernamecontroller,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5),
@@ -85,11 +92,11 @@ class _SignupState extends State<Signup> {
 
               //---------------------------------------------------------
               //Text field Email
-
               Container(
                 width: 300,
                 height: 50,
                 child: TextField(
+                  controller: emailcontroller,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5),
@@ -104,7 +111,9 @@ class _SignupState extends State<Signup> {
                   ),
                 ),
               ),
-              // close Text field Email
+              // if (emailcontroller.text.isEmpty ||
+              //     !emailcontroller.text.contains('@'))
+              // // close Text field Email
 
               SizedBox(
                 height: 20,
@@ -112,11 +121,11 @@ class _SignupState extends State<Signup> {
 
               //---------------------------------------------------------
               //Text field password
-
               Container(
                 width: 300,
                 height: 50,
                 child: TextField(
+                  controller: passwordcontroller,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5),
@@ -132,6 +141,12 @@ class _SignupState extends State<Signup> {
                   obscureText: true,
                 ),
               ),
+              // if (passwordcontroller.text.isEmpty ||
+              //     passwordcontroller.text.length < 6)
+              //   Text(
+              //     'Please enter a password with at least 6 characters',
+              //     style: TextStyle(color: Colors.red),
+              //   ),
 
               SizedBox(
                 height: 20,
@@ -139,11 +154,11 @@ class _SignupState extends State<Signup> {
 
               //---------------------------------------------------------
               //Text field Re enter pass
-
               Container(
                 width: 300,
                 height: 50,
                 child: TextField(
+                  controller: confirmpasswordcontroller,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5),
@@ -166,7 +181,6 @@ class _SignupState extends State<Signup> {
 
               //---------------------------------------------------------
               // register btn
-
               Container(
                 width: 190,
                 height: 45,
@@ -175,21 +189,28 @@ class _SignupState extends State<Signup> {
                     primary: Colors.deepPurpleAccent,
                     onPrimary: Colors.white,
                   ),
-                  onPressed: (){
-
+                  onPressed: () {
+                    if (validate()) {
+                      // ScaffoldMessenger.of(context).showSnackBar(
+                      // SnackBar(content: Text("Success")));
+                      upload();
+                    }
                   },
-                  child: Text('Register',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
+                  child: Text(
+                    'Register',
+                    style:
+                    TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
                 ),
-                decoration:BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.deepPurple.withOpacity(0.2),
-                        blurRadius: 10,
-                        offset: Offset(0,3),
-                      ),
-                    ]
-
-                ) ,
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.deepPurple.withOpacity(0.2),
+                      blurRadius: 10,
+                      offset: Offset(0, 3),
+                    ),
+                  ],
+                ),
               ),
 
               SizedBox(
@@ -211,6 +232,9 @@ class _SignupState extends State<Signup> {
                       ),
                       Container(
                         child: InkWell(
+                          onTap: () => {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => user_login())),
+                          },
                           child: Text(
                             'Login',
                             style: TextStyle(
@@ -229,5 +253,65 @@ class _SignupState extends State<Signup> {
         ),
       ),
     );
+  }
+
+  bool validate() {
+    if (usernamecontroller.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Please enter a username"),
+        ),
+      );
+      return false;
+    }
+
+    if (emailcontroller.text.isEmpty || !emailcontroller.text.contains('@')) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Please enter a valid email address"),
+        ),
+      );
+      return false;
+    }
+
+    if (passwordcontroller.text.isEmpty || passwordcontroller.text.length < 6) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Please enter a password with at least 6 characters"),
+        ),
+      );
+      return false;
+    }
+
+    if (confirmpasswordcontroller.text != passwordcontroller.text) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Passwords do not match"),
+        ),
+      );
+      return false;
+    }
+
+    return true;
+  }
+
+  Future<void> upload() async {
+    String url = BASE_URL+"user_action/user_registration.php";
+    var response = await http.post(Uri.parse(url), body: {
+      'name': usernamecontroller.text,
+      'email': emailcontroller.text,
+      'password': passwordcontroller.text,
+    });
+
+    if (response.statusCode == 200) {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => user_login()));
+    } else {
+      // Display error message in a SnackBar
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to connect to server'),
+        ),
+      );
+    }
   }
 }
