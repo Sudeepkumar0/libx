@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 class user_signup extends StatefulWidget {
   const user_signup({Key? key}) : super(key: key);
-
   @override
   _UserSignupState createState() => _UserSignupState();
 }
