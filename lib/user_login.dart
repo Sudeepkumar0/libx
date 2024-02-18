@@ -189,7 +189,7 @@ class _LoginState extends State<Login> {
       if (res.statusCode == 200) {
         if (res.body == "success") {
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => userhome()));
+              context, MaterialPageRoute(builder: (context) => UserHome()));
         }
         else{
           ScaffoldMessenger.of(context)

@@ -1,94 +1,120 @@
 import 'package:flutter/material.dart';
+import 'Category.dart';
+import 'MyBooks.dart';
+import 'Profile.dart';
 
-class userhome extends StatefulWidget {
-  const userhome({Key? key});
-  @override
-  State<userhome> createState() => _userhomeState();
-}
-
-class _userhomeState extends State<userhome> {
+// Define a placeholder HomeScreen widget
+class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //bottom navigation  bar
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.3), // Shadow color with opacity
-              spreadRadius: 1, // Spread radius
-              blurRadius: 4, // Blur radius
-              offset: Offset(0, -2), // Offset of the shadow (0 is for no offset in x-axis, -2 is for moving the shadow upwards)
-            ),
-          ],
-        ),
-        height: 118,
-        child: BottomNavigationBar(
-          backgroundColor: Colors.deepPurple,
-          items: [
-            BottomNavigationBarItem(
-              icon: Padding(
-                padding: const EdgeInsets.only(top: 25),
-                child: Icon(Icons.home),
-              ),
-              label: 'Home',
-              backgroundColor: Colors.deepPurple,
-            ),
-            BottomNavigationBarItem(
-              icon: Padding(
-                padding: const EdgeInsets.only(top: 25),
-                child: Icon(Icons.book_rounded,),
-              ),
-              label: 'MyBooks',
-            ),
-            BottomNavigationBarItem(
-              icon: Padding(
-                padding: const EdgeInsets.only(top: 25),
-                child: Icon(Icons.category),
-              ),
-              label: 'Category',
-            ),
-          ],
-          selectedItemColor: Colors.black,
-          unselectedItemColor: Colors.white,
-          selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
-          unselectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
-        ),
-      ),
 
+    );
 
+  }
+}
 
+class UserHome extends StatefulWidget {
+  const UserHome({Key? key});
 
-      //App Top navigation bar
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(70),
-        child: AppBar(
-          backgroundColor: Colors.deepPurple,
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 15),
-                child: Text(
-                  'Logo',
-                  textAlign: TextAlign.right,
-                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                ),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: EdgeInsets.only(left: 190),
-                  child: Icon(
-                    Icons.search,
-                    color: Colors.white,
-                    size: 35,
-                  ),
-                ),
-              ),
-            ],
+  @override
+  State<UserHome> createState() => _UserHomeState();
+}
+
+class _UserHomeState extends State<UserHome> {
+  int _selectedIndex = 0;
+  late List<Widget> _screens;
+
+  @override
+  void initState() {
+    super.initState();
+    _screens = [
+      HomeScreen(),
+      Category(),
+      MyBooks(),
+      Profile(),
+    ];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      endDrawer: Drawer(
+        backgroundColor: Colors.grey,
+        child: Center(
+          child: ListTile(
+            title: Text('My title'),
+
           ),
         ),
+
       ),
+
+
+      appBar: AppBar(
+        iconTheme:IconThemeData(color: Colors.white) ,
+        backgroundColor:Colors.deepPurple,
+        leading: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Container(
+                width: 200,
+                height: 200,
+                child: Image.asset('assets/logo.png'),
+
+              ),
+            ),
+          ],
+        ),
+      ),
+
+
+      //Bottom navigation
+
+      bottomNavigationBar: NavigationBarTheme(
+        data: NavigationBarThemeData(
+          indicatorColor: Colors.deepPurple,
+          labelTextStyle: MaterialStateProperty.all(TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+            fontSize: 15,
+          )),
+        ),
+        child: NavigationBar(
+          selectedIndex: _selectedIndex,
+          height: 100,
+          backgroundColor: Colors.white,
+          destinations: [
+            NavigationDestination(
+              icon: Icon(Icons.home, size: 30),
+              selectedIcon: Icon(Icons.home, size: 30, color: Colors.white),
+              label: 'Home',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.category, size: 30),
+              selectedIcon: Icon(Icons.category, size: 30, color: Colors.white),
+              label: 'Category',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.book_rounded, size: 30),
+              selectedIcon: Icon(Icons.book_rounded, size: 30, color: Colors.white),
+              label: 'MyBooks',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.person, size: 30),
+              selectedIcon: Icon(Icons.person, size: 30, color: Colors.white),
+              label: 'Profile',
+            ),
+          ],
+          onDestinationSelected: (int index) {
+            setState(() {
+              _selectedIndex = index;
+            });
+          },
+        ),
+      ),
+      body: _screens[_selectedIndex],
     );
   }
 }
