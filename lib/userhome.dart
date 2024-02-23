@@ -18,6 +18,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Column(
         children: [
           CarouselSlider(
+            //carousel
             items: [
               Image.asset('assets/carousle_img 1.jpg'),
               Image.asset('assets/carousle_img 2.jpg'),
