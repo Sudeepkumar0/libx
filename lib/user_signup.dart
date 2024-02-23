@@ -185,8 +185,7 @@ class _SignupState extends State<Signup> {
                 height: 45,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.deepPurpleAccent,
-                    onPrimary: Colors.white,
+                    foregroundColor: Colors.white, backgroundColor: Colors.deepPurpleAccent,
                   ),
                   onPressed: () {
                     if (validate()) {
