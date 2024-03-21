@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:libx/top_books.dart';
 import 'Category.dart';
 import 'MyBooks.dart';
 import 'Profile.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+
+import 'new_books.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -15,50 +18,65 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          CarouselSlider(
-            items: [
-              Image.asset('assets/carousle_img 1.jpg'),
-              Image.asset('assets/carousle_img 2.jpg'),
-              Image.asset('assets/carousle_img 3.jpg'),
-            ],
-            options: CarouselOptions(
-              autoPlay: true,
-              //enlargeCenterPage: true,
-              //enableInfiniteScroll: true,
-              //aspectRatio: 16 / 9,
-              onPageChanged: (index, reason) {
-                setState(() {
-                  _currentIndex = index;
-                });
-              },
-            ),
-          ),
-          SizedBox(height: 5),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              for (int i = 0; i < 3; i++)
-                Container(
-                  width: 10,
-                  height: 10,
-                  margin: EdgeInsets.symmetric(horizontal: 2),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: _currentIndex == i ? Colors.blue : Colors.grey,
-                  ),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Container(
+              height: 200, // Set a fixed height
+              child: CarouselSlider(
+                items: [
+                  Image.asset('assets/carousle_img 1.jpg'),
+                  Image.asset('assets/carousle_img 2.jpg'),
+                  Image.asset('assets/carousle_img 3.jpg'),
+                ],
+                options: CarouselOptions(
+                  autoPlay: true,
+                  onPageChanged: (index, reason) {
+                    setState(() {
+                      _currentIndex = index;
+                    });
+                  },
                 ),
-            ],
-          ),
-          Container(
+              )
+            ),
+            // SizedBox(height: 5),
+            //
+            Container(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  for (int i = 0; i < 3; i++)
+                    Container(
+                      width: 10,
+                      height: 10,
+                      margin: EdgeInsets.symmetric(horizontal: 2),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: _currentIndex == i ? Colors.blue : Colors.grey,
+                      ),
+                    ),
+                ],
+              ),
+            ),
 
-          )
-        ],
+        Container(
+          height: 270,
+               // padding: EdgeInsets.all(10),
+                child: BookList(), // Display top books here
+              ),
+            Container(
+              height: 270,
+              // padding: EdgeInsets.all(10),
+              child: newbooks(), // Display top books here
+            ),
+          ],
+        ),
       ),
     );
   }
 }
+
 
 class UserHome extends StatefulWidget {
   const UserHome({Key? key});
@@ -103,7 +121,8 @@ class _UserHomeState extends State<UserHome> {
               child: Container(
                 width: 500,
                 height: 500,
-                child: Image.asset('assets/logo.png'),
+                margin: EdgeInsets.only(left: 10),
+                child: Image.asset('assets/lbx_logo.png'),
               ),
             ),
           ],

@@ -22,6 +22,7 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   final emailcontroller = TextEditingController();
   final passwordcontroller = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -111,14 +112,14 @@ class _LoginState extends State<Login> {
               ),
 
               //forgot password
-             Container(
-               child: TextButton(
-                 onPressed: (){
+              Container(
+                child: TextButton(
+                  onPressed: (){
 
-                 },
-                 child: Text('Forgot Password?'),
-               ),
-             ),
+                  },
+                  child: Text('Forgot Password?'),
+                ),
+              ),
 
               //login btn
 
@@ -130,20 +131,20 @@ class _LoginState extends State<Login> {
                     foregroundColor: Colors.white, backgroundColor: Colors.deepPurpleAccent,
                   ),
                   onPressed: (){
-                   // if(validate()){
-                     authenticateuser();
-                   // }
+                    if(validate()){
+                      authenticateuser();
+                    }
                   },
                   child: Text('Login',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
                 ),
                 decoration:BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.deepPurple.withOpacity(0.2),
-                      blurRadius: 10,
-                      offset: Offset(0,3),
-                    ),
-                  ]
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.deepPurple.withOpacity(0.2),
+                        blurRadius: 10,
+                        offset: Offset(0,3),
+                      ),
+                    ]
 
                 ) ,
               ),
@@ -179,21 +180,22 @@ class _LoginState extends State<Login> {
     return true;
   }
   Future<void> authenticateuser() async {
-      String url = BASE_URL + "user_action/user_login.php";
-      final res = await http.post(Uri.parse(url), body: {
-        "email": emailcontroller.text,
-        "password": passwordcontroller.text,
-      });
+    String url = BASE_URL + "user_action/user_login.php";
+    final res = await http.post(Uri.parse(url), body: {
+      "email": emailcontroller.text,
+      "password": passwordcontroller.text,
+    });
 
-      if (res.statusCode == 200) {
-        if (res.body == "success") {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => UserHome()));
-        }
-        else{
-          ScaffoldMessenger.of(context)
-              .showSnackBar(new SnackBar(content: Text(res.body)));
-        }
+    if (res.statusCode == 200) {
+      if (res.body != "failure") {
+        Navigator.push(
+            // context, MaterialPageRoute(builder: (context) => UserHome(userID: res.body)));
+            context, MaterialPageRoute(builder: (context) => UserHome()));
+      }
+      else{
+        ScaffoldMessenger.of(context)
+            .showSnackBar(new SnackBar(content: Text("Invalid Credentials")));
       }
     }
+  }
 }

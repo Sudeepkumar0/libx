@@ -31,6 +31,10 @@ dependencies:
   flutter:
     sdk: flutter
   carousel_slider: ^4.2.1
+  syncfusion_flutter_core: ^24.2.8
+  syncfusion_flutter_pdfviewer: ^24.2.8
+  url_launcher: ^6.2.5
+  google_fonts: ^6.2.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -64,9 +68,16 @@ flutter:
     - assets/education.png
     - assets/login_img.png
     - assets/logo.png
+    - assets/lbx_logo.png
     - assets/carousle_img 1.jpg
     - assets/carousle_img 2.jpg
     - assets/carousle_img 3.jpg
+    - assets/english.jpg
+    - assets/hindi.jpeg
+    - assets/kannada.jpeg
+    - assets/maliyalam.jpeg
+    - assets/tamil.jpg
+    - assets/telugu.jpg
 
 
 
