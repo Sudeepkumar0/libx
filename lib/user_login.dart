@@ -1,7 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:libx/userhome.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 import 'constants.dart';
 
 class user_login extends StatelessWidget {
@@ -187,6 +189,15 @@ class _LoginState extends State<Login> {
     });
 
     if (res.statusCode == 200) {
+      print(res.body);
+      var data = json.decode(res.body);
+      String userid = data['userid'];
+
+      // Store userId in session
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString('userid', userid);
+      print(prefs);
+
       if (res.body != "failure") {
         Navigator.push(
             // context, MaterialPageRoute(builder: (context) => UserHome(userID: res.body)));
